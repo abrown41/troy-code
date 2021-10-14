@@ -42,7 +42,7 @@ for i in range(1, len(x)-1):
     A[i, i] = (-2/(dx**2)) + ((2*E*m)/(hbar**2))
     A[i, i+1] = 1/(dx**2)
 
-b = np.zeros(len(x))
+b = np.zeros(len(x)) 
 
 psi_approx = np.linalg.solve(A, b)
 

@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Oct  6 16:23:35 2021
-
-@author: Troy
-"""
-
 import numpy as np
 import matplotlib.pyplot as plt
 import math
@@ -12,7 +5,7 @@ import math
 # Particle in a box
 # Atomic units so numbers stay in sensible range
 
-L = 1                                                                          # Width of box
+L = 1                                                                          # Width of box in Bohr radii
 n = int(input('Eigenstate? '))                                                 # Lowest eigenstate
 k = (n * math.pi / L)
 norm = math.sqrt((2/L))                                                        # Normalisation coefficient
@@ -53,16 +46,17 @@ energies_list = energies.tolist()
 while energies_list[0] < 0:
     del energies_list[0]                                                       # Nonsense energies both turned out to be negative while all others were positive
     
-eigenstates = np.arange(1, 100)
+eigenstates = np.arange(1, len(x)-1)
 an_nrg = eigenstates**2 * np.pi**2 / 2                                         # Analytical energy values
 
-# Eigenvectors founds by linalg.eig have physically unimportant sign change due to construction of the problem; I flip signs to compare to analytical solution
-eig_vec *= -1                                                                  
-
-
 for i in range(2, 7):                                                          # Plots first few eigenfunctions, disregarding two trivial solutions
+    eigen_energy = sorted_eig_val[i]
+    col_loc = eig_val.tolist().index(eigen_energy)                             # Locates the column in the array of eigenvectors corresponding to each eigenstate
+    eigenfunction = eig_vec[:, col_loc]
+    if eigenfunction[0, :] * eigenfunction[1, :] < 0:                          # Some eigenvectors have physically unimportant sign change; this flips such cases to compare to analytical solution 
+        eigenfunction *= -1                                                    
     plt.figure(i)
-    plt.plot(x, eig_vec[:, eig_val.tolist().index(sorted_eig_val[i])])
+    plt.plot(x, eigenfunction)
     plot_title = 'n = ' + str(i-1)
     plt.title(plot_title)
 
@@ -71,3 +65,9 @@ plt.plot(eigenstates, energies_list, label='Approximate eigen-energies')
 plt.plot(eigenstates, an_nrg, label='Analytical eigen-energies')
 plt.title('Energies as a function of n')
 plt.legend()
+plt.xlabel('n')
+plt.ylabel('Energy (Ha)')
+
+plt.figure(100)
+plt.plot(x, exact)
+plt.title('Analytical Solution')

@@ -12,6 +12,7 @@ t = np.linspace(0, 10, 100)                                          # Array of 
 dt = t[1] - t[0]
 tau = 1.5 
 
+
 def an_sol(t):                                                                 # Analytical solution for comparison
     n = N0 * math.exp(-t / tau)
     return n

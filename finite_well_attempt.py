@@ -15,13 +15,18 @@ hbar = 1
 m = 1
 L = 1                    # Atomic units for each
 D = (1j * hbar)/(2 * m)  # Coefficient on second spatial derivative, named to mirror diffusion code
-V0 = float(input('Potential?'))
+V0 = float(input('Potential? '))
 dx = 0.01
 dt = 0.01*(dx**2) / abs(D)
 x = np.linspace(-L, L, 101)                                                    # Discretising domain
 dx = x[1] - x[0]                                                               # Defining grid spacing
 psi_left = 0 + 0j                                                              # Chosen to approximate psi asymptote
 psi_right = 0 + 0j
+V = np.zeros(len(x))
+
+for i in range(0, len(x)):
+    if x[i] < -L/2 or L/2 < x[i]:
+        V[i] = V0
 
 def initial_condition(x):                       # Simple Gaussian function, corresponding to particle's position being roughly known
     return (np.exp((-(x)**2)/0.001))
@@ -35,14 +40,7 @@ def nsd(psi, dx):
     return d2f
 
 def update(psi, dx, dt, D):
-    d_psi = []
-    for i in range(0, len(x)):
-        if -L/2 < x[i] < L/2:
-            d_psi_i = D * nsd(psi, dx)[i] * dt
-            d_psi.append(d_psi_i)
-        else:
-            d_psi_i = ((D * nsd(psi, dx)[i]) - ((1j/2*m) * V0 * psi[i]))*dt
-            d_psi.append(d_psi_i)
+    d_psi = (D * nsd(psi, dx) - 1j/hbar * V * psi)* dt
     return d_psi
 
 def time_propagate(T, dx, dt, D, psi):
@@ -61,3 +59,4 @@ for ii in range(0,11):
     psi = time_propagate(ii*100*dt, dx, dt, D, psi) # propagate for 100 time steps, then stop and plot
     plt.plot(x,np.abs(psi)**2, label ="T="+str(ii*100)+"dt") # plot probability
 plt.legend()
+plt.title(f'V = {V0} Ha')

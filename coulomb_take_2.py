@@ -8,13 +8,13 @@ Created on Sun Jan 23 14:34:09 2022
 import numpy as np
 import matplotlib.pyplot as plt
 
-dx = 0.01
+dx = 0.1
 dt = 1e-6
 L = 20
 x = np.arange(dx, L+dx, dx)                                                    # Discretising domain, excluding origin to avoid division by 0
 V = -1/ (x)
 hbar = 1
-T = 0.01
+T = 0.1
 
 def ground(x):
     return 1/np.sqrt(np.pi) * np.exp(-x)

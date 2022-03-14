@@ -50,7 +50,7 @@ E0 = 0.5
 omega = 1  # 2*np.pi/(T)
 
 def external_potential(t):
-    return E0*np.sin(omega*t)*x
+    return E0*np.sin(omega*t)*np.sin(np.pi*t/T)**8 * x
 
 def test_taylor(H, psi, dt, t, order):
     H_t = H
